@@ -1,22 +1,40 @@
-import ProductFilter from "./assets/components/ProductFilter";
+/* eslint-disable react/prop-types */
 import "./App.css";
+import { useState, useCallback } from 'react';
 
-function App() {
-  const products = [
-    { id: 1, name: "Laptop" },
-    { id: 2, name: "Mouse" },
-    { id: 3, name: "Keyboard" },
-    { id: 4, name: "Monitor" },
-    { id: 5, name: "Printer" },
-    { id: 6, name: "Tablet" },
-    { id: 7, name: "Smartphone" },
-  ];
+function ChatApp() {
+  const [messages, setMessages] = useState([]);
+
+  const sendMessage = useCallback((message) => {
+    setMessages(prevMessages => [...prevMessages, message]);
+  }, []);
 
   return (
     <>
-      <ProductFilter products={products} />
+      <MessageInput onSend={sendMessage} />
+      <ul>
+        {messages.map((msg, index) => (
+          <li key={index}>{msg}</li>
+        ))}
+      </ul>
     </>
   );
 }
 
-export default App;
+function MessageInput({ onSend }) {
+  const [text, setText] = useState('');
+
+  const handleSend = () => {
+    onSend(text);
+    setText('');
+  };
+
+  return (
+    <>
+      <input value={text} onChange={(e) => setText(e.target.value)} />
+      <button onClick={handleSend}>Send</button>
+    </>
+  );
+}
+
+export default ChatApp;
